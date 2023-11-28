@@ -42,7 +42,7 @@ public class MapGenerator : MonoBehaviour
         grassSpawner = GetComponent<GrassSpawner>();
 
         plane.SetActive(false);
-        grassSpawner.enabled = true;
+        //grassSpawner.enabled = true;
         
         FillChunkList();
     }
@@ -74,7 +74,7 @@ public class MapGenerator : MonoBehaviour
         if (FindSqrDistanceBetweenTwoPoints(player.position, plane.transform.position) >= chunkRenderingDistance * chunkRenderingDistance)
         {
             plane.SetActive(true);
-            grassSpawner.enabled = false;
+            //grassSpawner.enabled = false;
             
             if(!disabledChunks)
             {
@@ -89,7 +89,7 @@ public class MapGenerator : MonoBehaviour
             if(FindSqrDistanceBetweenTwoPoints(player.position, plane.transform.position) < 1000 * 1000)
             {
                 plane.SetActive(false);
-                GetComponent<GrassSpawner>().enabled = true;
+                //grassSpawner.enabled = true;
             }
 
             disabledChunks = false;

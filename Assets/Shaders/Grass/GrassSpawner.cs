@@ -102,7 +102,7 @@ public class GrassSpawner : MonoBehaviour
         foreach (Transform child in transform)
         {
             List<List<ObjectData>> chunkBatches = new List<List<ObjectData>>();
-            Vector3[] vertices = MeshGenerator.AddVerticesToMesh(child, 30);
+            Vector3[] vertices = MeshGenerator.AddVerticesToMesh(child, 40);
 
             for (int i = 0; i < vertices.Length; i++)
             {

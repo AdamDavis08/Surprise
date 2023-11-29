@@ -4,6 +4,22 @@ using UnityEngine;
 using System.Linq;
 using Unity.Jobs;
 
+[System.Serializable]
+public class GrassData
+{
+    public float[,,] positions = new float[100, 36100, 3];
+
+    public GrassData(int chunkIndex, Vector3[] pos)
+    {
+        for(int i = 0; i < pos.Length; i++)
+        {
+            positions[chunkIndex, i, 0] = pos[i].x;
+            positions[chunkIndex, i, 1] = pos[i].y;
+            positions[chunkIndex, i, 2] = pos[i].z;
+        }
+    }
+}
+
 public struct ObjectChunk
 {
     public Vector3 position;
@@ -99,11 +115,13 @@ public class GrassSpawner : MonoBehaviour
         wind.Create();
         numWindThreadGroups = Mathf.CeilToInt(wind.height / 8.0f);
 
+        int chunkIndex = 0;
         foreach (Transform child in transform)
         {
             List<List<ObjectData>> chunkBatches = new List<List<ObjectData>>();
-            Vector3[] vertices = MeshGenerator.AddVerticesToMesh(child, 40);
+            Vector3[] vertices = MeshGenerator.AddVerticesToMesh(child, 10);
 
+            Debug.Log(vertices.Length);
             for (int i = 0; i < vertices.Length; i++)
             {
                 if (vertices[i].y * MeshDataSettings.meshScale.y < minHeight) continue;
@@ -111,6 +129,7 @@ public class GrassSpawner : MonoBehaviour
                 Vector2 uv = new Vector2(vertices[i].x, vertices[i].z);
                 AddObject(currentBatch, new Vector3(vertices[i].x * MeshDataSettings.meshScale.x, vertices[i].y * MeshDataSettings.meshScale.y, vertices[i].z * MeshDataSettings.meshScale.z), uv);
                 batchIndex++;
+
                 if (batchIndex >= 1000)
                 {
                     batches.Add(currentBatch);
@@ -146,6 +165,8 @@ public class GrassSpawner : MonoBehaviour
                 chunk.positionsBuffer.SetData(data);
                 chunk.material.SetBuffer("positionBuffer", chunk.culledPositionsBuffer);
                 chunk.material.SetTexture("_WindTex", wind);
+
+                chunkIndex++;
             }
         }
     }
@@ -153,6 +174,20 @@ public class GrassSpawner : MonoBehaviour
     private void Update()
     {
         RenderBatches();
+    }
+
+    private void SaveGrassData(int chunkIndex, Vector3[] positions)
+    {
+        GrassData data = new GrassData(chunkIndex, positions);
+        SaveSystem.SaveGrassPositions(data);
+    }
+
+    private void LoadGrassData()
+    {
+        GrassData data = SaveSystem.LoadGrassPositions();
+
+        Vector3 pos = new Vector3(data.positions[0, 0, 0], data.positions[0, 0, 1], data.positions[0, 0, 2]);
+        Debug.Log(pos);
     }
 
     private void GenerateWind()

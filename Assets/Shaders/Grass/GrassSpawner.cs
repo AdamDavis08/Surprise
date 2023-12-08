@@ -94,6 +94,7 @@ public class GrassSpawner : MonoBehaviour
     private List<List<ObjectData>> batches = new List<List<ObjectData>>();
     private List<ObjectChunk> grassChunks = new List<ObjectChunk>();
 
+    public bool grassGenerated = false;
     private uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
     private uint[] argsLOD = new uint[5] { 0, 0, 0, 0, 0 };
 
@@ -105,8 +106,10 @@ public class GrassSpawner : MonoBehaviour
     private int numWindThreadGroups;
     private RenderTexture wind;
 
-    private void Start()
+    private IEnumerator GenerateGrass()
     {
+        yield return new WaitForEndOfFrame();
+
         int batchIndex = 0;
         List<ObjectData> currentBatch = new List<ObjectData>();
 
@@ -119,9 +122,9 @@ public class GrassSpawner : MonoBehaviour
         foreach (Transform child in transform)
         {
             List<List<ObjectData>> chunkBatches = new List<List<ObjectData>>();
-            Vector3[] vertices = MeshGenerator.AddVerticesToMesh(child, 10);
+            Vector3[] vertices = MeshGenerator.AddVerticesToMesh(child, 30);
 
-            Debug.Log(vertices.Length);
+            yield return new WaitForEndOfFrame();
             for (int i = 0; i < vertices.Length; i++)
             {
                 if (vertices[i].y * MeshDataSettings.meshScale.y < minHeight) continue;
@@ -139,7 +142,7 @@ public class GrassSpawner : MonoBehaviour
                 }
             }
 
-            if(chunkBatches.Count != 0)
+            if (chunkBatches.Count != 0)
             {
                 List<ObjectData> data = new List<ObjectData>();
                 ObjectChunk chunk = new ObjectChunk(child.position, chunkBatches, new Material(grassMaterial));
@@ -168,26 +171,20 @@ public class GrassSpawner : MonoBehaviour
 
                 chunkIndex++;
             }
+            yield return new WaitForEndOfFrame();
         }
+
+        grassGenerated = true;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(GenerateGrass());
     }
 
     private void Update()
     {
         RenderBatches();
-    }
-
-    private void SaveGrassData(int chunkIndex, Vector3[] positions)
-    {
-        GrassData data = new GrassData(chunkIndex, positions);
-        SaveSystem.SaveGrassPositions(data);
-    }
-
-    private void LoadGrassData()
-    {
-        GrassData data = SaveSystem.LoadGrassPositions();
-
-        Vector3 pos = new Vector3(data.positions[0, 0, 0], data.positions[0, 0, 1], data.positions[0, 0, 2]);
-        Debug.Log(pos);
     }
 
     private void GenerateWind()
@@ -201,6 +198,8 @@ public class GrassSpawner : MonoBehaviour
 
     private void RenderBatches()
     {
+        if (!grassGenerated) return;
+
         GenerateWind();
 
         foreach (ObjectChunk chunk in grassChunks)
@@ -246,6 +245,11 @@ public class GrassSpawner : MonoBehaviour
             chunk.positionsBuffer.Release();
             chunk.culledPositionsBuffer.Release();
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        FreeBuffers();
     }
 
     private List<ObjectData> BuildNewBatch()

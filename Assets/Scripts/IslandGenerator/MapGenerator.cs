@@ -70,7 +70,7 @@ public class MapGenerator : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (player == null) return;
+        if (player == null || !grassSpawner.grassGenerated) return;
         if (FindSqrDistanceBetweenTwoPoints(player.position, plane.transform.position) >= chunkRenderingDistance * chunkRenderingDistance)
         {
             plane.SetActive(true);
@@ -103,7 +103,9 @@ public class MapGenerator : MonoBehaviour
                 chunksList[i].SetActive(true);
 
                 if (sqrDistance < distanceToColliderThreshold * distanceToColliderThreshold)
+                {
                     chunksList[i].GetComponent<MeshCollider>().enabled = true;
+                }
                 else
                     chunksList[i].GetComponent<MeshCollider>().enabled = false;
             }

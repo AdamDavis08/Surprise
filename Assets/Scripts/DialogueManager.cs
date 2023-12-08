@@ -33,7 +33,6 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(activeSentenceIndex);
         if(Input.GetKeyDown(KeyCode.E))
             DisplayNextSentence();
     }

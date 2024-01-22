@@ -31,6 +31,19 @@ public class MapGenerator : MonoBehaviour
         return (a.x - b.x) * (a.x - b.x) + (a.z - b.z) * (a.z - b.z);
     }
 
+    public static Transform StandingChunk()
+    {
+        Vector3 playerPosition = player.position;
+        playerPosition.z -= 1f;
+        playerPosition.y += 1f;
+        RaycastHit hitInfo;
+        if (Physics.Raycast(playerPosition, -Vector3.up, out hitInfo))
+            return hitInfo.transform;
+
+
+        return null;
+    }
+
     private void OnValidate()
     {
         //SpawnObjects();

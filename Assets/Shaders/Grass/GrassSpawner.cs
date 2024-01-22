@@ -4,22 +4,6 @@ using UnityEngine;
 using System.Linq;
 using Unity.Jobs;
 
-[System.Serializable]
-public class GrassData
-{
-    public float[,,] positions = new float[100, 36100, 3];
-
-    public GrassData(int chunkIndex, Vector3[] pos)
-    {
-        for(int i = 0; i < pos.Length; i++)
-        {
-            positions[chunkIndex, i, 0] = pos[i].x;
-            positions[chunkIndex, i, 1] = pos[i].y;
-            positions[chunkIndex, i, 2] = pos[i].z;
-        }
-    }
-}
-
 public struct ObjectChunk
 {
     public Vector3 position;
@@ -36,7 +20,7 @@ public struct ObjectChunk
     {
         this.position = position;
         this.batches = batches;
-        this.bounds = new Bounds(position, new Vector3(MeshDataSettings.meshScale.x * 20f, MeshDataSettings.meshScale.y * 100f, MeshDataSettings.meshScale.z * 20f));
+        this.bounds = new Bounds(position, new Vector3(-1000f, 1000f, 1000f));
 
         int count = 0;
         foreach (var batch in batches)
@@ -94,6 +78,8 @@ public class GrassSpawner : MonoBehaviour
     private List<List<ObjectData>> batches = new List<List<ObjectData>>();
     private List<ObjectChunk> grassChunks = new List<ObjectChunk>();
 
+    private ComputeBuffer voteBuffer, scanBuffer, groupSumArrayBuffer, scannedGroupSumBuffer;
+
     public bool grassGenerated = false;
     private uint[] args = new uint[5] { 0, 0, 0, 0, 0 };
     private uint[] argsLOD = new uint[5] { 0, 0, 0, 0, 0 };
@@ -103,15 +89,38 @@ public class GrassSpawner : MonoBehaviour
     public float frequency = 1.0f;
     public float windStrength = 1.0f;
 
-    private int numWindThreadGroups;
+    private int numThreadGroups, numWindThreadGroups, numVoteThreadGroups, numGroupScanThreadGroups;
     private RenderTexture wind;
 
     private IEnumerator GenerateGrass()
     {
         yield return new WaitForEndOfFrame();
 
+        int numInstancesPerChunk = 10000;
+        numThreadGroups = Mathf.CeilToInt(numInstancesPerChunk / 128.0f);
         int batchIndex = 0;
         List<ObjectData> currentBatch = new List<ObjectData>();
+
+        if(numThreadGroups > 128)
+        {
+            int powerOfTwo = 128;
+            while (powerOfTwo < numThreadGroups)
+                powerOfTwo *= 2;
+
+            numThreadGroups = powerOfTwo;
+        } 
+        else
+        {
+            while (128 % numThreadGroups != 0)
+                numThreadGroups++;
+        }
+
+        numVoteThreadGroups = Mathf.CeilToInt(numInstancesPerChunk / 128.0f);
+        numGroupScanThreadGroups = Mathf.CeilToInt(numInstancesPerChunk / 1024.0f);
+        voteBuffer = new ComputeBuffer(numInstancesPerChunk, 4);
+        scanBuffer = new ComputeBuffer(numInstancesPerChunk, 4);
+        groupSumArrayBuffer = new ComputeBuffer(numThreadGroups, 4);
+        scannedGroupSumBuffer = new ComputeBuffer(numThreadGroups, 4);
 
         wind = new RenderTexture(1024, 1024, 0, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear);
         wind.enableRandomWrite = true;
@@ -122,12 +131,11 @@ public class GrassSpawner : MonoBehaviour
         foreach (Transform child in transform)
         {
             List<List<ObjectData>> chunkBatches = new List<List<ObjectData>>();
-            Vector3[] vertices = MeshGenerator.AddVerticesToMesh(child, 30);
+            Vector3[] vertices = MeshGenerator.AddVerticesToMesh(child, 10);
 
-            yield return new WaitForEndOfFrame();
             for (int i = 0; i < vertices.Length; i++)
             {
-                if (vertices[i].y * MeshDataSettings.meshScale.y < minHeight) continue;
+                //if (vertices[i].y * MeshDataSettings.meshScale.y < minHeight) continue;
 
                 Vector2 uv = new Vector2(vertices[i].x, vertices[i].z);
                 AddObject(currentBatch, new Vector3(vertices[i].x * MeshDataSettings.meshScale.x, vertices[i].y * MeshDataSettings.meshScale.y, vertices[i].z * MeshDataSettings.meshScale.z), uv);
@@ -161,7 +169,7 @@ public class GrassSpawner : MonoBehaviour
                 argsLOD[0] = (uint)meshLOD.GetIndexCount(0);
                 argsLOD[1] = (uint)data.Count;
                 argsLOD[2] = (uint)meshLOD.GetIndexStart(0);
-                argsLOD[2] = (uint)meshLOD.GetBaseVertex(0);
+                argsLOD[3] = (uint)meshLOD.GetBaseVertex(0);
 
                 chunk.argsBuffer.SetData(args);
                 chunk.argsBufferLOD.SetData(argsLOD);
@@ -200,7 +208,10 @@ public class GrassSpawner : MonoBehaviour
     {
         if (!grassGenerated) return;
 
-        GenerateWind();
+        Matrix4x4 P = Camera.main.projectionMatrix;
+        Matrix4x4 V = Camera.main.transform.worldToLocalMatrix;
+        Matrix4x4 VP = P * V;
+        //GenerateWind();
 
         foreach (ObjectChunk chunk in grassChunks)
         {
@@ -208,16 +219,49 @@ public class GrassSpawner : MonoBehaviour
 
             bool noLOD = MapGenerator.FindSqrDistanceBetweenTwoPoints(chunk.position, player.position) <= distanceToLOD;
 
-            CullGrass(noLOD, chunk);
+            CullGrass(noLOD, chunk, VP);
             if(noLOD)
                 Graphics.DrawMeshInstancedIndirect(mesh, 0, chunk.material, chunk.bounds, chunk.argsBuffer);
             else
-                Graphics.DrawMeshInstancedIndirect(mesh, 0, chunk.material, chunk.bounds, chunk.argsBufferLOD);
+                Graphics.DrawMeshInstancedIndirect(meshLOD, 0, chunk.material, chunk.bounds, chunk.argsBufferLOD);
         }
     }
 
-    private void CullGrass(bool noLOD, ObjectChunk chunk)
+    private void CullGrass(bool noLOD, ObjectChunk chunk, Matrix4x4 VP)
     {
+        if (noLOD) chunk.argsBuffer.SetData(args);
+        else chunk.argsBufferLOD.SetData(argsLOD);
+
+/*        //Vote
+        cullGrassShader.SetMatrix("MATRIX_VP", VP);
+        cullGrassShader.SetBuffer(0, "_ObjectDataBuffer", chunk.positionsBuffer);
+        cullGrassShader.SetVector("_ChunkPos", chunk.position);
+        cullGrassShader.SetBuffer(0, "_VoteBuffer", voteBuffer);
+        cullGrassShader.SetVector("_CameraPos", Camera.main.transform.position);
+        cullGrassShader.SetFloat("_DistanceToGrassThreshold", distanceToGrassThreshold);
+        cullGrassShader.Dispatch(0, numVoteThreadGroups, 1, 1);
+
+        //Scan Instances
+        cullGrassShader.SetBuffer(1, "_VoteBuffer", voteBuffer);
+        cullGrassShader.SetBuffer(1, "_ScanBuffer", scanBuffer);
+        cullGrassShader.SetBuffer(1, "_GroupSumArray", groupSumArrayBuffer);
+        cullGrassShader.Dispatch(1, numThreadGroups, 1, 1);
+
+        // Scan Groups
+        cullGrassShader.SetInt("_NumOfGroups", numThreadGroups);
+        cullGrassShader.SetBuffer(2, "_GroupSumArrayIn", groupSumArrayBuffer);
+        cullGrassShader.SetBuffer(2, "_GroupSumArrayOut", scannedGroupSumBuffer);
+        cullGrassShader.Dispatch(2, numGroupScanThreadGroups, 1, 1);
+
+        // Compact
+        cullGrassShader.SetBuffer(3, "_ObjectDataBuffer", chunk.positionsBuffer);
+        cullGrassShader.SetBuffer(3, "_VoteBuffer", voteBuffer);
+        cullGrassShader.SetBuffer(3, "_ScanBuffer", scanBuffer);
+        cullGrassShader.SetBuffer(3, "_ArgsBuffer", noLOD ? chunk.argsBuffer : chunk.argsBufferLOD);
+        cullGrassShader.SetBuffer(3, "_CulledObjectDataOutputBuffer", chunk.culledPositionsBuffer);
+        cullGrassShader.SetBuffer(3, "_GroupSumArray", scannedGroupSumBuffer);
+        cullGrassShader.Dispatch(3, numThreadGroups, 1, 1);*/
+
         cullGrassShader.SetBool("noLOD", noLOD);
         cullGrassShader.SetVector("_ChunkPos", chunk.position);
         cullGrassShader.SetVector("_CameraPos", Camera.main.transform.position);
@@ -245,6 +289,11 @@ public class GrassSpawner : MonoBehaviour
             chunk.positionsBuffer.Release();
             chunk.culledPositionsBuffer.Release();
         }
+
+        voteBuffer.Release();
+        scanBuffer.Release();
+        groupSumArrayBuffer.Release();
+        scannedGroupSumBuffer.Release();
     }
 
     private void OnApplicationQuit()

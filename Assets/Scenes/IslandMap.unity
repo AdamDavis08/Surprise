@@ -947475,10 +947475,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a87060a7b4de3f47938dd5f75cb8814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mesh: {fileID: 7629811779324647873, guid: 779dba4a621fcec4a8b0a58607c67bbf, type: 3}
-  meshLOD: {fileID: 7629811779324647873, guid: ff99c7dd4bfc46e4b84d3fcdc8c6cf25, type: 3}
-  grassMaterial: {fileID: 2100000, guid: 793eb4c796daf40489eed0141637df3c, type: 2}
-  cullGrassShader: {fileID: 7200000, guid: dc0b8b5e0d195374886f92dcd4e6ae2f, type: 3}
+  mesh: {fileID: 3836962167230424001, guid: c3c1a1a66aeadcc4291e9e3a7c96bdca, type: 3}
+  meshLOD: {fileID: -4435434709360095332, guid: c3c1a1a66aeadcc4291e9e3a7c96bdca,
+    type: 3}
+  grassMaterial: {fileID: 2100000, guid: eb57f93d34dfbfe4ca3db1be3a07abc4, type: 2}
+  cullGrassShader: {fileID: 7200000, guid: 6cada7f6a5a3cfb41a69b0cb039d2482, type: 3}
   generateWindShader: {fileID: 7200000, guid: 80bd9ce1888eba047bce34573f2a2ef6, type: 3}
   offset: 1
   numberOfChunksPerLine: 10

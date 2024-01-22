@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public static class MeshGenerator
 {
@@ -119,33 +120,41 @@ public static class MeshGenerator
 
 	public static Vector3[] AddVerticesToMesh(Transform chunk, int additions)
     {
+		LayerMask groundLayer = LayerMask.NameToLayer("Ground");
 		Mesh mesh = chunk.GetComponent<MeshFilter>().mesh;
 		int vertsPerLine = (int)Mathf.Sqrt(mesh.vertexCount);
 		float difference = 1f / additions;
-		Vector3[] vertices = new Vector3[(mesh.vertexCount - (2 * vertsPerLine - 1)) * additions * additions];
-		int c = 0;
+		Vector3[] vertices;
+		ArrayList verticesList = new ArrayList();
 
-		for(int i = vertsPerLine; i < mesh.vertexCount; i++)
-        {
+		for (int i = vertsPerLine; i < mesh.vertexCount; i++)
+		{
 			Vector3 vertexOfNormalMesh = mesh.vertices[i];
 			if (i % vertsPerLine == 0) continue;
 
-			for(int x = 0; x < additions; x++)
-            {
-				for(int z = 0; z < additions; z++)
-                {
+			for (int x = 0; x < additions; x++)
+			{
+				for (int z = 0; z < additions; z++)
+				{
 					Vector3 vertPosGlobal = chunk.position + new Vector3(x * difference * MeshDataSettings.meshScale.x + vertexOfNormalMesh.x * MeshDataSettings.meshScale.x, 250f, z * difference * MeshDataSettings.meshScale.z + vertexOfNormalMesh.z * MeshDataSettings.meshScale.z);
 					RaycastHit hitInfo;
-					if(Physics.Raycast(vertPosGlobal, -Vector3.up, out hitInfo))
-                    {
+					if (Physics.Raycast(vertPosGlobal, -Vector3.up, out hitInfo))
+					{
 						vertPosGlobal.y = hitInfo.point.y;
-                    }
+						verticesList.Add(chunk.InverseTransformPoint(vertPosGlobal));
+/*						if (hitInfo.collider.gameObject.layer == groundLayer)
+                        {
+                        }*/
+					}
+				}
+			}
+		}
 
-					vertices[c] = chunk.InverseTransformPoint(vertPosGlobal);
-					c++;
-                }
-            }
-        }
+		vertices = new Vector3[verticesList.Count];
+		for (int i = 0; i < verticesList.Count; i++)
+		{
+			vertices[i] = (Vector3)verticesList[i];
+		}
 
 		return vertices;
 	}

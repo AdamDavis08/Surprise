@@ -15,6 +15,11 @@ public class MapGenerator : MonoBehaviour
     private GrassSpawner grassSpawner;
 
     public GameObject plane;
+    public Transform parentTree;
+
+    public Terrain terrain;
+    private TerrainData terrainData;
+
     public static Transform player;
     public float renderDistance;
     public const float distanceToColliderThreshold = 400f;
@@ -46,31 +51,58 @@ public class MapGenerator : MonoBehaviour
 
     private void OnValidate()
     {
-        //SpawnObjects();
+        terrainData = terrain.terrainData;
+        //GenerateTerrain();
+        SpawnObjects();
     }
 
     private void Start()
     {
         player = ThirdPersonMovement.instance.transform;
         grassSpawner = GetComponent<GrassSpawner>();
+        terrainData = terrain.terrainData;
 
         plane.SetActive(false);
         //grassSpawner.enabled = true;
         
-        FillChunkList();
+        //FillChunkList();
     }
 
     private void SpawnObjects()
     {
-        int chunkSize = heightData.islandSize / numberOfChunksPerLine + 2;
-        for (int i = 0; i < numberOfChunksPerLine; i++)
+        int islandSize = terrainData.heightmapResolution;
+        float[,] objectMap = Noise.GenerateNoiseMap(islandSize, seed + 10, meshData.scale - 10, heightData.octaves, heightData.persistance, heightData.lacunarity, Vector2.zero);
+        System.Random prng = new System.Random(seed.GetHashCode());
+      
+        terrainData.treeInstances = new TreeInstance[0];
+        for (int x = 0; x < islandSize; x+=3)
         {
-            for (int j = numberOfChunksPerLine - 1; j >= 0; j--)
+            for(int y = 0; y < islandSize; y+=3)
             {
-                Transform chunk = transform.GetChild(i * numberOfChunksPerLine + j);
-                TerrainObjectsGenerator.GenerateTerrainObjectsMap(Noise.GenerateNoiseMap(chunkSize, seed + 10, meshData.scale - 10, heightData.octaves, heightData.persistance, heightData.lacunarity, new Vector2(i * chunkSize, j * chunkSize)), seed, chunkSize, terrainObjectData.terrainObjects[0], chunk);
+                Vector2 position = new Vector3((float)(x + prng.Next(0, 20) / 10f) / islandSize, (float)(y + prng.Next(0, 20) / 10f) / islandSize);
+                if (terrainData.GetInterpolatedHeight(position.x, position.y) < 30f) continue;
+
+                if (objectMap[x, y] < 0.5f)
+                {
+                    TreeInstance treeInstance = new TreeInstance();
+                    treeInstance.prototypeIndex = 0;
+                    treeInstance.position = new Vector3(position.x, 0, position.y);
+                    treeInstance.prototypeIndex = 0;
+                    treeInstance.widthScale = 1f;
+                    treeInstance.heightScale = 1f;
+                    treeInstance.color = Color.white;
+                    treeInstance.lightmapColor = Color.white;
+                    terrain.AddTreeInstance(treeInstance);
+                }
             }
         }
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.delayCall += () =>
+        {
+            terrain.Flush();
+        };
+#endif
     }
 
     private void FillChunkList()
@@ -81,7 +113,26 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void GenerateTerrain()
+    {
+        int islandSize = terrainData.heightmapResolution;
+
+        float[,] islandMap = Noise.GenerateNoiseMap(islandSize, seed, meshData.scale, heightData.octaves, heightData.persistance, heightData.lacunarity, Vector2.zero);
+        float[,] falloffMap = FalloffGenerator.GenerateFalloffMap(islandSize);
+
+        for (int x = 0; x < islandSize; x++)
+        {
+            for (int y = 0; y < islandSize; y++)
+            {
+                islandMap[x, y] = Mathf.Clamp01(islandMap[x, y] - falloffMap[x, y]) / 7.5f;
+                //islandMap[x, y] = heightCurve.Evaluate(islandMap[x, y]);
+            }
+        }
+
+        terrainData.SetHeights(0, 0, islandMap);
+    }
+
+    /*private void FixedUpdate()
     {
         if (player == null || !grassSpawner.grassGenerated) return;
         if (FindSqrDistanceBetweenTwoPoints(player.position, plane.transform.position) >= chunkRenderingDistance * chunkRenderingDistance)
@@ -125,7 +176,7 @@ public class MapGenerator : MonoBehaviour
             else
                 chunksList[i].SetActive(false);
         }
-    }
+    }*/
 
     private void DrawMesh(MeshData meshData)
     {

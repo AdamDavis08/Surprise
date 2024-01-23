@@ -18,7 +18,7 @@ public class TerrainObjectsGenerator
                 {
                     Transform terrainObject = GameObject.Instantiate(settings.prefabs[object_prng.Next(0, settings.prefabs.Length)]).transform;
                     terrainObject.parent = parent;
-                    terrainObject.localPosition = new Vector3(x - mapSize / 2 + (float)(prng.Next(0, 20) / 10f), 50f, y - mapSize / 2 + (float)(prng.Next(0, 20) / 10f));
+                    terrainObject.localPosition = new Vector3(x + (float)(prng.Next(0, 20) / 10f), 50f, y + (float)(prng.Next(0, 20) / 10f));
 
                     Ray ray = new Ray(terrainObject.position, -Vector3.up);
                     RaycastHit hitInfo;

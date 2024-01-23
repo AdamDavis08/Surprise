@@ -15,5 +15,5 @@ MonoBehaviour:
   islandSize: 200
   octaves: 8
   persistance: 0.5
-  lacunarity: 2
+  lacunarity: 1.5
   offset: {x: 0, y: 0}

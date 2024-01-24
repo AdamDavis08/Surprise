@@ -43,7 +43,7 @@ Material:
     - _RefractionStrength: 2
     - _WaterDepth: 10
     m_Colors:
-    - _DeepWater: {r: 0, g: 0.29411766, b: 0.8039216, a: 0.2509804}
+    - _DeepWater: {r: 0, g: 0.29411766, b: 0.8039216, a: 0.59607846}
     - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
-    - _ShallowWater: {r: 0, g: 0.9843137, b: 1, a: 0.09803922}
+    - _ShallowWater: {r: 0, g: 0.9843137, b: 1, a: 0.20392157}
   m_BuildTextureStacks: []

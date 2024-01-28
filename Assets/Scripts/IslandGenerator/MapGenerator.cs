@@ -34,12 +34,20 @@ public class MapGenerator : MonoBehaviour
         plane.SetActive(false);
     }
 
+    private void OnValidate()
+    {
+        terrainData = terrain.terrainData;
+
+        GenerateTerrain();
+    }
+
     private void SpawnObjects()
     {
         int islandSize = terrainData.heightmapResolution;
         float[,] objectMap = Noise.GenerateNoiseMap(islandSize, seed + 10, meshData.scale - 10, heightData.octaves, heightData.persistance, heightData.lacunarity, Vector2.zero);
+        float[,] forestBiomeMap = Noise.GenerateNoiseMap(islandSize, seed + 15, meshData.scale - 10, heightData.octaves, heightData.persistance, heightData.lacunarity, Vector2.zero);
         System.Random prng = new System.Random(seed.GetHashCode());
-      
+
         terrainData.treeInstances = new TreeInstance[0];
         for (int x = 0; x < islandSize; x+=3)
         {
@@ -50,10 +58,12 @@ public class MapGenerator : MonoBehaviour
 
                 if (objectMap[x, y] < 0.5f)
                 {
+                    int typeOfTree = (forestBiomeMap[x, y] >= 0.25f) ? 0 : (forestBiomeMap[x, y] >= 0.125f) ? 1 : 2;
+
                     TreeInstance treeInstance = new TreeInstance();
-                    treeInstance.prototypeIndex = 0;
+                    treeInstance.prototypeIndex = typeOfTree;
                     treeInstance.position = new Vector3(position.x, 0, position.y);
-                    treeInstance.prototypeIndex = 0;
+                    treeInstance.rotation = Random.Range(0, 360f) * Mathf.Deg2Rad;
                     treeInstance.widthScale = 1f;
                     treeInstance.heightScale = 1f;
                     treeInstance.color = Color.white;

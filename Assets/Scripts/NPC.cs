@@ -33,22 +33,22 @@ public class NPC : MonoBehaviour
 
     private void Update()
     {
-        if (MapGenerator.FindSqrDistanceBetweenTwoPoints(transform.position, MapGenerator.player.position) > MapGenerator.distanceToColliderThreshold * MapGenerator.distanceToColliderThreshold)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
+        //if (MapGenerator.FindSqrDistanceBetweenTwoPoints(transform.position, MapGenerator.player.position) > MapGenerator.distanceToColliderThreshold * MapGenerator.distanceToColliderThreshold)
+        //{
+        //    gameObject.SetActive(false);
+        //    return;
+        //}
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-        animator.SetBool("isGrounded", isGrounded);
+        //animator.SetBool("isGrounded", isGrounded);
 
-        if (!isGrounded) animator.SetBool("isFalling", true);
-        else animator.SetBool("isFalling", false);
+        //if (!isGrounded) animator.SetBool("isFalling", true);
+        //else animator.SetBool("isFalling", false);
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
-            animator.SetBool("isJumping", false);
+            //animator.SetBool("isJumping", false);
         }
 
         velocity.y += gravity * Time.deltaTime;
@@ -85,16 +85,16 @@ public class NPC : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(offset);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, turnSmoothTime * Time.deltaTime);
 
-            if (run) { animator.SetBool("isRunning", true); animator.SetBool("isWalking", false); }
-            else { animator.SetBool("isWalking", true); animator.SetBool("isRunning", false); }
+            //animator.SetBool("isRunning", run); 
+            //animator.SetBool("isWalking", !run);
 
             Vector3 move = (run) ? offset.normalized * sprintSpeed * Time.deltaTime : offset.normalized * speed * Time.deltaTime;
             controller.Move(move);
         }
         else
         {
-            animator.SetBool("isRunning", false);
-            animator.SetBool("isWalking", false);
+            //animator.SetBool("isRunning", false);
+            //animator.SetBool("isWalking", false);
             if (wander) wanderPoint = Vector3.zero;
 
             if(!isWaiting) StartCoroutine(Wait());

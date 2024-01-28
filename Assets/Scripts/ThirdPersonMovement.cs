@@ -8,6 +8,8 @@ public class ThirdPersonMovement : MonoBehaviour
     public CharacterController controller;
     public Animator animator;
 
+    public GameObject jumpParticleEffect;
+    public ParticleSystem runningParticleEffect;
     public Transform groundCheck;
     public Transform cam;
     public LayerMask groundMask;
@@ -73,6 +75,7 @@ public class ThirdPersonMovement : MonoBehaviour
 
         if(Input.GetButtonDown("Jump") && isGrounded)
         {
+            Destroy(Instantiate(jumpParticleEffect, groundCheck.position, Quaternion.identity), 1f);
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
             animator.SetBool("isJumping", true);
         }
@@ -94,5 +97,8 @@ public class ThirdPersonMovement : MonoBehaviour
             animator.SetBool("isWalking", false);
             animator.SetBool("isRunning", false);
         }
+
+        if (isSprinting && isGrounded) runningParticleEffect.emissionRate = 10f;
+        else runningParticleEffect.emissionRate = 0f;
     }
 }

@@ -7,6 +7,7 @@ public class StarField : MonoBehaviour
 
     private static float starIntensity = 0.6f;
     public Material particleMaterial;
+    public Material cloudsMaterial;
 
     private ParticleSystem.Particle[] points;
 
@@ -41,5 +42,6 @@ public class StarField : MonoBehaviour
         starIntensity = -sinValue;
         starIntensity = Mathf.Clamp(starIntensity, 0f, 0.6f);
         particleMaterial.color = new Color(particleMaterial.color.r, particleMaterial.color.g, particleMaterial.color.b, starIntensity);
+        cloudsMaterial.SetFloat("_CloudsAlpha", Mathf.Clamp(sinValue, 0.1f, 1f));
     }
 }

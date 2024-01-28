@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3700698651894861201}
-  - component: {fileID: 3700698653345962344}
   m_Layer: 2
   m_Name: Blacksmith
   m_TagString: Untagged
@@ -32,18 +31,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3700698653345962344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3700698651894861202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc9b664df1fa4e34d843cc43e5bd040a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2444404214703956335
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -205,6 +192,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4742473837712756890, guid: b2f51d30ee2dcd34c99c11f23f697d5c,
+        type: 3}
+      propertyPath: m_LODs.Array.data[0].screenRelativeHeight
+      value: 0.5815621
+      objectReference: {fileID: 0}
+    - target: {fileID: 4742473837712756890, guid: b2f51d30ee2dcd34c99c11f23f697d5c,
+        type: 3}
+      propertyPath: m_LODs.Array.data[1].screenRelativeHeight
+      value: 0.41122237
+      objectReference: {fileID: 0}
+    - target: {fileID: 4742473837712756890, guid: b2f51d30ee2dcd34c99c11f23f697d5c,
+        type: 3}
+      propertyPath: m_LODs.Array.data[2].screenRelativeHeight
+      value: 0.20047855
+      objectReference: {fileID: 0}
+    - target: {fileID: 4742473837712756890, guid: b2f51d30ee2dcd34c99c11f23f697d5c,
+        type: 3}
+      propertyPath: m_LODs.Array.data[3].screenRelativeHeight
+      value: 0.13123141
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2f51d30ee2dcd34c99c11f23f697d5c, type: 3}

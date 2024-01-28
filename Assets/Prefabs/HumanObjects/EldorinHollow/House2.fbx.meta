@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 59689f3d041845b4aac50a487406fc3f
+guid: 31aa00a8121076e4b9d611fea270e0bf
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -7,17 +7,17 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: BaseBody.002
+      name: BaseBody.003
     second: {fileID: 2100000, guid: 721f7668f5248d444ade5dd1bdbbf4bd, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: OutProp.001
+      name: OutProp.002
     second: {fileID: 2100000, guid: 774d9b6739fa6404997cfe8889338a96, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Skeleton
+      name: Skeleton.001
     second: {fileID: 2100000, guid: c165db93001136a4582d04a9974c79d8, type: 2}
   materials:
     materialImportMode: 2
@@ -48,7 +48,11 @@ ModelImporter:
     clipAnimations: []
     isReadable: 0
   meshes:
-    lODScreenPercentages: []
+    lODScreenPercentages:
+    - 0.25
+    - 0.125
+    - 0.0625
+    - 0.01
     globalScale: 1
     meshCompression: 0
     addColliders: 0

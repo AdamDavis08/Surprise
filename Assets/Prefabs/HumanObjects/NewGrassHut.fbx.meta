@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 96169326c79d5ec44b7fd7d5bdfe236d
+guid: 10e76daca4ffa5945869a278fcd54390
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
@@ -7,8 +7,13 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.002
-    second: {fileID: 2100000, guid: 5dd6b4e123612cd41ab756c18eeaec55, type: 2}
+      name: Extras
+    second: {fileID: 2100000, guid: 75f25f58dd4d5fb488feb8c604428095, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: House
+    second: {fileID: 2100000, guid: f9a773c07903d39448d322af77598bf3, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -38,7 +43,11 @@ ModelImporter:
     clipAnimations: []
     isReadable: 0
   meshes:
-    lODScreenPercentages: []
+    lODScreenPercentages:
+    - 0.25
+    - 0.125
+    - 0.0625
+    - 0.01
     globalScale: 1
     meshCompression: 0
     addColliders: 0
@@ -68,7 +77,7 @@ ModelImporter:
     secondaryUVMinLightmapResolution: 40
     secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

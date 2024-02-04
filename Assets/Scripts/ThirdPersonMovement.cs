@@ -46,6 +46,10 @@ public class ThirdPersonMovement : MonoBehaviour
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
+        RaycastHit hitInfo;
+        if(Physics.Raycast(groundCheck.position, -Vector3.up, out hitInfo))
+            transform.position = hitInfo.point;
     }
 
     private void Update()

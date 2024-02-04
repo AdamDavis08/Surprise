@@ -36,7 +36,7 @@ Material:
     - Vector1_7850184: 100
     - Vector1_9F739ED8: 1
     - _CloudDensity: 1
-    - _CloudsAlpha: 0.81535995
+    - _CloudsAlpha: 0.899724
     - _Intensity: 0.18
     - _SpeedOfCloud: 6000
     - _StepCutoff: 0.2

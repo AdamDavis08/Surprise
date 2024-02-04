@@ -34,13 +34,6 @@ public class MapGenerator : MonoBehaviour
         plane.SetActive(false);
     }
 
-    private void OnValidate()
-    {
-        terrainData = terrain.terrainData;
-
-        GenerateTerrain();
-    }
-
     private void SpawnObjects()
     {
         int islandSize = terrainData.heightmapResolution;

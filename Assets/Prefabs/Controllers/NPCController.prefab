@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2030398162899543998}
   - component: {fileID: 2030398162899543997}
   - component: {fileID: 2030398162899543996}
-  - component: {fileID: 803198883518864583}
   m_Layer: 0
   m_Name: NPCController
   m_TagString: Untagged
@@ -65,39 +64,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4816d9ee623f0c348a073d97efe591c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactIndicator: {fileID: 0}
   groundCheck: {fileID: 2030398164258055394}
   controller: {fileID: 2030398162899543997}
   animator: {fileID: 2030398162366771875}
   groundMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1280
   speed: 6
   sprintSpeed: 12
   turnSmoothTime: 7.5
   waitTime: 2
   gravity: -19.62
   groundDistance: 0.4
-  waypoints:
-  - {x: -10, y: 0, z: -10}
-  - {x: -10, y: 0, z: 10}
-  - {x: 10, y: 0, z: 10}
-  - {x: 10, y: 0, z: -10}
-  - {x: 0, y: 0, z: 0}
+  wanderRadius: 10
+  timeToSameWander: 0
+  waypoints: []
   repeatPath: 0
   run: 0
+  wander: 1
   drawWaypoints: 1
---- !u!114 &803198883518864583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2030398162899543971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45692343ffe703344b1de056504e747d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2030398164258055393
 GameObject:
   m_ObjectHideFlags: 0

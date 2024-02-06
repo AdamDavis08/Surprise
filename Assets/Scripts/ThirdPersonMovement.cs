@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Cinemachine;
 
@@ -28,6 +29,13 @@ public class ThirdPersonMovement : MonoBehaviour
     private Vector3 velocity;
 
     public static ThirdPersonMovement instance;
+    public static Vector3 playerPosition
+    {
+        get
+        {
+            return instance.transform.position;
+        }
+    }
 
     private void Awake()
     {

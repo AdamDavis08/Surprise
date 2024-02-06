@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class PlayerInWaterChecker : MonoBehaviour
 {
+    public static bool isUnderwater = false;
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
         {
-            ThirdPersonMovement.instance.ignoreGravity = true;
-            ThirdPersonMovement.instance.animator.SetTrigger("inWater");
-            ThirdPersonMovement.instance.animator.SetBool("outOfWater", false);
+            ThirdPersonMovement player = ThirdPersonMovement.instance;
+            player.ignoreGravity = true;
+            player.animator.SetTrigger("inWater");
+            player.animator.SetBool("outOfWater", false);
+            isUnderwater = true;
         }
     }
 
@@ -20,6 +24,7 @@ public class PlayerInWaterChecker : MonoBehaviour
         {
             ThirdPersonMovement.instance.ignoreGravity = false;
             ThirdPersonMovement.instance.animator.SetBool("outOfWater", true);
+            isUnderwater = false;
         }
     }
 }

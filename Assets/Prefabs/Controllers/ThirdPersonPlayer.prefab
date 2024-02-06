@@ -4909,7 +4909,7 @@ MonoBehaviour:
   cam: {fileID: 0}
   groundMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 1280
   speed: 6
   sprintSpeed: 12
   gravity: -19.62

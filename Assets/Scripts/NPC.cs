@@ -16,8 +16,8 @@ public class NPC : MonoBehaviour
     public float waitTime = 2f;
     public float gravity = -9.81f;
     public float groundDistance = 0.4f;
-    public float wanderRadius = 4f; 
-    public float timeToSameWander;
+    public const float wanderRadius = 20f; 
+    private float timeToSameWander;
 
     public Vector3[] waypoints;
     private Vector3 velocity;
@@ -59,14 +59,14 @@ public class NPC : MonoBehaviour
             if(wanderPoint == Vector3.zero)
             {
                 timeToSameWander = 0f;
-                wanderPoint = PointToWander();
+                wanderPoint = PointToWander(transform, wanderRadius);
             }
 
             timeToSameWander += Time.deltaTime;
             if (timeToSameWander >= 5f)
             {
                 timeToSameWander = 0F;
-                wanderPoint = PointToWander();
+                wanderPoint = PointToWander(transform, wanderRadius);
             }
 
             MoveTowardsTarget(wanderPoint);
@@ -123,7 +123,7 @@ public class NPC : MonoBehaviour
         }
     }
 
-    private Vector3 PointToWander()
+    public static Vector3 PointToWander(Transform transform, float wanderRadius)
     {
         Vector3 randPoint = transform.position + Random.insideUnitSphere * wanderRadius;
         Collider[] hitColliders = Physics.OverlapSphere(randPoint, 1f);
@@ -131,17 +131,14 @@ public class NPC : MonoBehaviour
         while(hitColliders.Length != 0)
         {
             randPoint = transform.position + Random.insideUnitSphere * wanderRadius;
-            hitColliders = Physics.OverlapSphere(randPoint, 1f);
+            hitColliders = Physics.OverlapSphere(randPoint, 0.001f);
         }
 
         RaycastHit hitInfo;
         randPoint.y = 500f;
         if(Physics.Raycast(randPoint, -Vector3.up, out hitInfo))
         {
-            if(hitInfo.transform.gameObject.name.StartsWith("Chunk"))
-            {
-                randPoint = hitInfo.point;
-            }
+            randPoint = hitInfo.point;
         }
 
         return randPoint;

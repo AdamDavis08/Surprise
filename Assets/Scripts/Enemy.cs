@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour
             run = true;
 
             MoveTowardsTarget(ThirdPersonMovement.playerPosition);
-            if (Vector3.Distance(ThirdPersonMovement.playerPosition, transform.position) >= 50f || ThirdPersonMovement.isDead)
+            if (MapGenerator.FindSqrDistanceBetweenTwoPoints(ThirdPersonMovement.playerPosition, transform.position) >= 2500f|| ThirdPersonMovement.isDead) //koren od 2500f e 50f
             {
                 animator.SetBool("isRunning", false);
                 animator.SetBool("isWalking", false);
@@ -162,10 +162,10 @@ public class Enemy : MonoBehaviour
         speed = 0f;
 
         float startTime = Time.time;
+        bool hitSomething = false;
         while (Time.time < startTime + attackCooldown)
         {
             Collider[] hitTargets = Physics.OverlapSphere(hitCheck.position, attackRadius, targetMask);
-            bool hitSomething = false;
             foreach (Collider target in hitTargets)
             {
                 if(target.TryGetComponent<EntityStats>(out EntityStats stats) && !hitSomething)
@@ -177,7 +177,6 @@ public class Enemy : MonoBehaviour
             }
             yield return null;
         }
-
         speed = (run) ? sprintSpeed : walkSpeed;
         isAttacking = false;
     }

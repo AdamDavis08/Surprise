@@ -270,6 +270,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}
+      propertyPath: attackCooldown
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
       propertyPath: attackDistance
       value: 1.5
       objectReference: {fileID: 0}
@@ -287,6 +292,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyController (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6784019005444398331, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8057381399658521859, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}
@@ -371,7 +381,7 @@ PrefabInstance:
     - target: {fileID: 8546079897321069036, guid: 749e64051fdb0ea4ab708e3c3c33fb07,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8546079897321069036, guid: 749e64051fdb0ea4ab708e3c3c33fb07,
         type: 3}
@@ -381,7 +391,7 @@ PrefabInstance:
     - target: {fileID: 8546079897321069036, guid: 749e64051fdb0ea4ab708e3c3c33fb07,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22.060001
+      value: -12
       objectReference: {fileID: 0}
     - target: {fileID: 8546079897321069036, guid: 749e64051fdb0ea4ab708e3c3c33fb07,
         type: 3}
@@ -471,7 +481,7 @@ PrefabInstance:
     - target: {fileID: 1481594881246036962, guid: f10b0440c6a6a7844a61ea0ece571dda,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1481594881246036962, guid: f10b0440c6a6a7844a61ea0ece571dda,
         type: 3}
@@ -481,7 +491,7 @@ PrefabInstance:
     - target: {fileID: 1481594881246036962, guid: f10b0440c6a6a7844a61ea0ece571dda,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 34.06
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1481594881246036962, guid: f10b0440c6a6a7844a61ea0ece571dda,
         type: 3}
@@ -842,6 +852,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}
+      propertyPath: attackCooldown
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
       propertyPath: attackDistance
       value: 1.5
       objectReference: {fileID: 0}
@@ -859,6 +874,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyController (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6784019005444398331, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8057381399658521859, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}
@@ -962,6 +982,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}
+      propertyPath: attackCooldown
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
       propertyPath: attackDistance
       value: 1.5
       objectReference: {fileID: 0}
@@ -979,6 +1004,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyController (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6784019005444398331, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8057381399658521859, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}
@@ -1094,6 +1124,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}
+      propertyPath: attackCooldown
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
       propertyPath: attackDistance
       value: 1.5
       objectReference: {fileID: 0}
@@ -1111,6 +1146,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyController (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6784019005444398331, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8057381399658521859, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}
@@ -1244,7 +1284,7 @@ PrefabInstance:
     - target: {fileID: 4683270918327070187, guid: 94b854becb5d8514a8d13b169544dbe5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4683270918327070187, guid: 94b854becb5d8514a8d13b169544dbe5,
         type: 3}
@@ -1254,7 +1294,7 @@ PrefabInstance:
     - target: {fileID: 4683270918327070187, guid: 94b854becb5d8514a8d13b169544dbe5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 22.060001
+      value: -12
       objectReference: {fileID: 0}
     - target: {fileID: 4683270918327070187, guid: 94b854becb5d8514a8d13b169544dbe5,
         type: 3}
@@ -1304,12 +1344,12 @@ PrefabInstance:
     - target: {fileID: 4683270918409437755, guid: 94b854becb5d8514a8d13b169544dbe5,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0000000042887836
+      value: 0.000000004208132
       objectReference: {fileID: 0}
     - target: {fileID: 4683270918409437755, guid: 94b854becb5d8514a8d13b169544dbe5,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 3.317483e-10
+      value: -3.255097e-10
       objectReference: {fileID: 0}
     - target: {fileID: 4683270918942182825, guid: 94b854becb5d8514a8d13b169544dbe5,
         type: 3}
@@ -1334,12 +1374,12 @@ PrefabInstance:
     - target: {fileID: 4683270918942182825, guid: 94b854becb5d8514a8d13b169544dbe5,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -7.6287125e-15
       objectReference: {fileID: 0}
     - target: {fileID: 4683270918942182825, guid: 94b854becb5d8514a8d13b169544dbe5,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 1.2065936e-15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94b854becb5d8514a8d13b169544dbe5, type: 3}
@@ -1382,6 +1422,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}
+      propertyPath: attackCooldown
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 223240363085596712, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
       propertyPath: attackDistance
       value: 1.5
       objectReference: {fileID: 0}
@@ -1399,6 +1444,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyController
+      objectReference: {fileID: 0}
+    - target: {fileID: 6784019005444398331, guid: 77db91dace662b04bad1a5cd7487dcf1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8057381399658521859, guid: 77db91dace662b04bad1a5cd7487dcf1,
         type: 3}

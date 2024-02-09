@@ -4845,6 +4845,7 @@ GameObject:
   - component: {fileID: 1481594881246036962}
   - component: {fileID: 1481594881246036965}
   - component: {fileID: 1481594881246036964}
+  - component: {fileID: 5346648403988623474}
   m_Layer: 0
   m_Name: ThirdPersonPlayer
   m_TagString: Untagged
@@ -4917,6 +4918,20 @@ MonoBehaviour:
   groundDistance: 0.4
   turnSmoothTime: 0.1
   ignoreGravity: 0
+--- !u!114 &5346648403988623474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481594881246036967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d566158e6ab9da42a120545fa00830a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  damageCooldown: 1
 --- !u!1 &1481594881770805157
 GameObject:
   m_ObjectHideFlags: 0

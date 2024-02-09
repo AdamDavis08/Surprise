@@ -7,8 +7,8 @@ public class Enemy : MonoBehaviour
 {
     public CharacterController controller;
     public Animator animator;
-    private HitIndicator hitIndicator;
 
+    public Transform hitCheck;
     public Transform groundCheck;
     public LayerMask groundMask;
 
@@ -32,7 +32,12 @@ public class Enemy : MonoBehaviour
     public bool run;
     private bool seenPlayer;
     private bool isGrounded;
-    private bool isAttacking;
+    private bool isAttacking = false;
+
+    [Header("Combat")]
+    public float attackCooldown = 1f;
+    public float attackRadius = 1f;
+    public float damage = 10f;
 
     [Header("Field Of View")]
     public float viewRadius;
@@ -46,15 +51,18 @@ public class Enemy : MonoBehaviour
         AnimationClip[] clips = animator.runtimeAnimatorController.animationClips;
         foreach(AnimationClip clip in clips)
         {
-            if(clip.name == "scream")
+            switch(clip.name)
             {
-                screamLength = clip.length;
-                break;
+                case "Scream":
+                    screamLength = clip.length;
+                    break;
+                case "Attack":
+                    attackCooldown = clip.length;
+                    break;
             }
         }
 
         speed = (run) ? sprintSpeed : walkSpeed;
-        hitIndicator = GetComponentInChildren<HitIndicator>();
     }
 
     private void Update()
@@ -73,11 +81,9 @@ public class Enemy : MonoBehaviour
         if(seenPlayer)
         {
             run = true;
-            isAttacking = animator.GetBool("isAttacking");
-            hitIndicator.enabled = isAttacking;
 
             MoveTowardsTarget(ThirdPersonMovement.playerPosition);
-            if (Vector3.Distance(ThirdPersonMovement.playerPosition, transform.position) >= 50f)
+            if (Vector3.Distance(ThirdPersonMovement.playerPosition, transform.position) >= 50f || ThirdPersonMovement.isDead)
             {
                 animator.SetBool("isRunning", false);
                 animator.SetBool("isWalking", false);
@@ -89,7 +95,7 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        if (wander)
+        if (wander && speed > 0f)
         {
             if (wanderPoint == Vector3.zero) 
                 ResetWanderPoint();
@@ -135,7 +141,10 @@ public class Enemy : MonoBehaviour
 
             if (seenPlayer)
             {
-                animator.SetBool("isAttacking", true);
+                if(!isAttacking)
+                {
+                    StartCoroutine(Attack());
+                }
             }
             else 
             { 
@@ -144,6 +153,33 @@ public class Enemy : MonoBehaviour
                 if (speed != 0f) StartCoroutine(Wait());
             }
         }
+    }
+
+    private IEnumerator Attack()
+    {
+        isAttacking = true;
+        animator.SetBool("isAttacking", true);
+        speed = 0f;
+
+        float startTime = Time.time;
+        while (Time.time < startTime + attackCooldown)
+        {
+            Collider[] hitTargets = Physics.OverlapSphere(hitCheck.position, attackRadius, targetMask);
+            bool hitSomething = false;
+            foreach (Collider target in hitTargets)
+            {
+                if(target.TryGetComponent<EntityStats>(out EntityStats stats) && !hitSomething)
+                {
+                    stats.TakeDamage(damage);
+                    hitSomething = true;
+                    break;
+                }
+            }
+            yield return null;
+        }
+
+        speed = (run) ? sprintSpeed : walkSpeed;
+        isAttacking = false;
     }
 
     private IEnumerator Wait()
@@ -212,5 +248,8 @@ public class Enemy : MonoBehaviour
         Vector3 viewAngleB = DirectionFromAngle(viewAngle / 2f + transform.eulerAngles.y);
         Handles.DrawLine(transform.position, transform.position + viewAngleA * viewRadius);
         Handles.DrawLine(transform.position, transform.position + viewAngleB * viewRadius);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(hitCheck.position, attackRadius);
     }
 }

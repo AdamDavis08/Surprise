@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using Cinemachine;
 
-public class ThirdPersonMovement : MonoBehaviour
+public class ThirdPersonMovement : MonoBehaviour, IEntity
 {
     public CharacterController controller;
     public Animator animator;
@@ -23,6 +23,7 @@ public class ThirdPersonMovement : MonoBehaviour
     public float turnSmoothTime = 0.1f;
     private float turnSmoothVelocity;
 
+    public static bool isDead = false;
     public bool ignoreGravity;
     private bool isSprinting;
     private bool isGrounded;
@@ -62,6 +63,14 @@ public class ThirdPersonMovement : MonoBehaviour
 
     private void Update()
     {
+        if (isDead)
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+                ResetPlayer();
+
+            return;
+        }
+
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         isSprinting = Input.GetKey(KeyCode.LeftShift) && !ignoreGravity;
         animator.SetBool("isGrounded", isGrounded);
@@ -112,5 +121,33 @@ public class ThirdPersonMovement : MonoBehaviour
 
         if (isSprinting && isGrounded) runningParticleEffect.emissionRate = 10f;
         else runningParticleEffect.emissionRate = 0f;
+    }
+
+    public void ResetPlayer()
+    {
+        controller.enabled = true;
+        isDead = false;
+
+        TryGetComponent<EntityStats>(out EntityStats stats);
+        stats.health = 100f;
+
+        animator.Rebind();
+        animator.Update(0f);
+    }
+
+    public void Die()
+    {
+        if (isDead) return;
+
+        if(!isGrounded)
+        {
+            RaycastHit hitInfo;
+            if (Physics.Raycast(transform.position, -Vector3.up, out hitInfo))
+                transform.position = hitInfo.point;
+        }
+
+        controller.enabled = false;
+        isDead = true;
+        animator.SetTrigger("die");
     }
 }

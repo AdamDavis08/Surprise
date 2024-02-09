@@ -96,12 +96,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 8916649330371869451}
   animator: {fileID: 1955367955493851038}
+  hitCheck: {fileID: 0}
   groundCheck: {fileID: 5601814114945055063}
   groundMask:
     serializedVersion: 2
     m_Bits: 1280
   walkSpeed: 1
   sprintSpeed: 8
+  attackCooldown: 1
   turnSmoothTime: 10
   waitTime: 2
   gravity: -19.62
@@ -198,34 +200,3 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 1955367956530634156}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3224335366133912984 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4007639778900346932, guid: 2e139245ce20a0047bbd05e9c8f692fa,
-    type: 3}
-  m_PrefabInstance: {fileID: 1955367956530634156}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6763789721735934711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3224335366133912984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3985c814062754444b6b2d1856c4b541, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!135 &8999704702082752720
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3224335366133912984}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}

@@ -34,6 +34,23 @@ public class MapGenerator : MonoBehaviour
         plane.SetActive(false);
     }
 
+    public static float GetHighestPointInterpolated(TerrainData terrainData)
+    {
+        int terrainSize = terrainData.heightmapResolution;
+        float result = 0;
+        for (int i = 0; i < terrainSize; i++)
+        {
+            for (int j = 0; j < terrainSize; j++)
+            {
+                float height = terrainData.GetInterpolatedHeight((float)j / terrainSize, (float)i / terrainSize);
+                if (result < height)
+                    result = height;
+            }
+        }
+
+        return result;
+    }
+    
     private void SpawnObjects()
     {
         int islandSize = terrainData.heightmapResolution;

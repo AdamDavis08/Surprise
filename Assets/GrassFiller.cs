@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,14 +6,45 @@ using UnityEngine;
 public class GrassFiller : MonoBehaviour
 {
     public Terrain terrain;
-    public Transform player;
 
     public int grassDensity = 10;
     public int patchDetail = 1;
 
     public float minHeight = 0f;
-
+    
     private void OnValidate()
+    {
+        FillTextures();
+    }
+
+    private void FillTextures()
+    {
+        TerrainData terrainData = terrain.terrainData;
+        float[,,] splatmapData = new float[terrainData.alphamapWidth, terrainData.alphamapHeight, terrainData.alphamapLayers];
+        float highestPoint = MapGenerator.GetHighestPointInterpolated(terrainData);
+        
+        for (int y = 0; y < terrainData.alphamapHeight; y++)
+        {
+            for (int x = 0; x < terrainData.alphamapWidth; x++)
+            {
+                float height = terrainData.GetInterpolatedHeight((float)y / terrainData.alphamapWidth, (float)x / terrainData.alphamapWidth);
+                Vector3 splat = new Vector3(0, 1, 0);
+                
+                if (height < minHeight) 
+                    splat = Vector3.Lerp(splat, new Vector3(1,0,0), 1f); //TODO: Fix blending between textures
+                else
+                    splat = Vector3.Lerp(splat, new Vector3(0,1,0), 1f);
+                
+                splat.Normalize();
+                splatmapData[x, y, 0] = splat.y;
+                splatmapData[x, y, 1] = splat.x;
+            }
+        }
+        
+        terrainData.SetAlphamaps(0, 0, splatmapData);
+    }
+    
+    private void FillGrass()
     {
         int islandSize = terrain.terrainData.heightmapResolution;
         terrain = GetComponent<Terrain>();
@@ -36,10 +68,5 @@ public class GrassFiller : MonoBehaviour
         }
 
         terrain.terrainData.SetDetailLayer(0, 0, 0, newMap);
-    }
-
-    private void Update()
-    {
-        Debug.Log(terrain.SampleHeight(player.position));
     }
 }

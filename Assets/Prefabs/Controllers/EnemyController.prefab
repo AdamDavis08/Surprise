@@ -41,6 +41,7 @@ GameObject:
   - component: {fileID: 8057381399658521859}
   - component: {fileID: 8916649330371869451}
   - component: {fileID: 223240363085596712}
+  - component: {fileID: 6503419336656940022}
   m_Layer: 0
   m_Name: EnemyController
   m_TagString: Untagged
@@ -103,7 +104,6 @@ MonoBehaviour:
     m_Bits: 1280
   walkSpeed: 1
   sprintSpeed: 8
-  attackCooldown: 1
   turnSmoothTime: 10
   waitTime: 2
   gravity: -19.62
@@ -111,6 +111,9 @@ MonoBehaviour:
   attackDistance: 2
   wander: 0
   run: 0
+  attackCooldown: 1
+  attackRadius: 1
+  damage: 10
   viewRadius: 0
   viewAngle: 0
   targetMask:
@@ -119,6 +122,20 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &6503419336656940022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6784019005444398331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d566158e6ab9da42a120545fa00830a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  damageCooldown: 1
 --- !u!1001 &1955367956530634156
 PrefabInstance:
   m_ObjectHideFlags: 0

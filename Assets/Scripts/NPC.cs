@@ -40,15 +40,15 @@ public class NPC : MonoBehaviour
         //}
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-        //animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isGrounded", isGrounded);
 
-        //if (!isGrounded) animator.SetBool("isFalling", true);
-        //else animator.SetBool("isFalling", false);
+        if (!isGrounded) animator.SetBool("isFalling", true);
+        else animator.SetBool("isFalling", false);
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
-            //animator.SetBool("isJumping", false);
+            animator.SetBool("isJumping", false);
         }
 
         velocity.y += gravity * Time.deltaTime;
@@ -85,16 +85,16 @@ public class NPC : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(offset);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, turnSmoothTime * Time.deltaTime);
 
-            //animator.SetBool("isRunning", run); 
-            //animator.SetBool("isWalking", !run);
+            animator.SetBool("isRunning", run); 
+            animator.SetBool("isWalking", !run);
 
             Vector3 move = (run) ? offset.normalized * sprintSpeed * Time.deltaTime : offset.normalized * speed * Time.deltaTime;
             controller.Move(move);
         }
         else
         {
-            //animator.SetBool("isRunning", false);
-            //animator.SetBool("isWalking", false);
+            animator.SetBool("isRunning", false);
+            animator.SetBool("isWalking", false);
             if (wander) wanderPoint = Vector3.zero;
 
             if(!isWaiting) StartCoroutine(Wait());

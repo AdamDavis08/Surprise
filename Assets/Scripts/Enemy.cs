@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IEntity
 {
     public CharacterController controller;
     public Animator animator;
@@ -30,6 +30,7 @@ public class Enemy : MonoBehaviour
 
     public bool wander;
     public bool run;
+    private bool isDead = false;
     private bool seenPlayer;
     private bool isGrounded;
     private bool isAttacking = false;
@@ -194,6 +195,22 @@ public class Enemy : MonoBehaviour
         speed = 0f;
         yield return new WaitForSeconds(screamLength);
         speed = (run) ? sprintSpeed : walkSpeed;
+    }
+
+    public void Die()
+    {
+        if (isDead) return;
+
+        if (!isGrounded)
+        {
+            RaycastHit hitInfo;
+            if (Physics.Raycast(transform.position, -Vector3.up, out hitInfo))
+                transform.position = hitInfo.point;
+        }
+
+        controller.enabled = false;
+        isDead = true;
+        animator.SetTrigger("die");
     }
 
     public static Vector3 DirectionFromTarget(Vector3 center, Vector3 target)

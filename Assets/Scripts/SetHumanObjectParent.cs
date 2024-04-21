@@ -8,30 +8,27 @@ public class SetHumanObjectParent : MonoBehaviour
     {
         if (transform.parent == null) return;
 
-        RaycastHit hitInfo;
-        Vector3 origin = new Vector3(transform.position.x, 500f, transform.position.z);
-        if(Physics.Raycast(origin, -Vector3.up, out hitInfo))
+        int i = 0;
+        while(transform.childCount > 0)
         {
-            if(hitInfo.transform.gameObject.name.StartsWith("Chunk"))
+            Transform child = transform.GetChild(i);
+            child.GetComponentInChildren<Collider>().enabled = false;    
+        
+            RaycastHit hitInfo;
+            Vector3 origin = new Vector3(child.position.x, 500f, child.position.z);
+            if(Physics.Raycast(origin, -Vector3.up, out hitInfo))
             {
-                GameObject glue = null;
-                foreach(Transform child in hitInfo.transform)
+                if (hitInfo.transform.gameObject.name.StartsWith("Crystal Haven"))
                 {
-                    if(child.gameObject.name == "Glue")
-                    {
-                        glue = child.gameObject;
-                        break;
-                    }
+                    child.SetParent(hitInfo.transform);
                 }
-
-                if(glue == null)
-                    glue = new GameObject("Glue");
-
-                glue.transform.SetParent(hitInfo.transform);
-                transform.SetParent(glue.transform);
+                else
+                    i++;
             }
-        }
 
+            child.GetComponentInChildren<Collider>().enabled = true;
+        }
+        
         Destroy(this);
     }
 }

@@ -71,17 +71,17 @@ public class ThirdPersonMovement : MonoBehaviour, IEntity
             return;
         }
 
-        if(Input.GetMouseButtonDown(0))
-        {
-            //TODO: SMENI GO KODOT MORASH GRD E
-            RaycastHit hitInfo;
-            if(Physics.Raycast(transform.GetChild(2).position, Camera.main.transform.forward, out hitInfo))
-            {
-                Debug.Log(hitInfo.collider.name);
-                hitInfo.collider.TryGetComponent<EntityStats>(out EntityStats stats);
-                if(stats != null) stats.TakeDamage(50);
-            }
-        }
+        // if(Input.GetMouseButtonDown(0))
+        // {
+        //     //TODO: SMENI GO KODOT MORASH GRD E
+        //     RaycastHit hitInfo;
+        //     if(Physics.Raycast(transform.GetChild(2).position, Camera.main.transform.forward, out hitInfo))
+        //     {
+        //         Debug.Log(hitInfo.collider.name);
+        //         hitInfo.collider.TryGetComponent<EntityStats>(out EntityStats stats);
+        //         if(stats != null) stats.TakeDamage(50);
+        //     }
+        // }
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         isSprinting = Input.GetKey(KeyCode.LeftShift) && !ignoreGravity;

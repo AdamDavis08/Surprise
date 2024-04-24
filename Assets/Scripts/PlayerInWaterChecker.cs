@@ -10,7 +10,7 @@ public class PlayerInWaterChecker : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            ThirdPersonMovement player = ThirdPersonMovement.instance;
+            Player player = Player.instance;
             player.ignoreGravity = true;
             player.animator.SetTrigger("inWater");
             player.animator.SetBool("outOfWater", false);
@@ -22,8 +22,8 @@ public class PlayerInWaterChecker : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            ThirdPersonMovement.instance.ignoreGravity = false;
-            ThirdPersonMovement.instance.animator.SetBool("outOfWater", true);
+            Player.instance.ignoreGravity = false;
+            Player.instance.animator.SetBool("outOfWater", true);
             isUnderwater = false;
         }
     }

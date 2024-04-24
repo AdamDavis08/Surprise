@@ -49,7 +49,7 @@ public class BoatController : MonoBehaviour, IInteractable
 
     private void Enter()
     {
-        ThirdPersonMovement.instance.gameObject.SetActive(false);
+        Player.instance.gameObject.SetActive(false);
         ZoomOptions.cmOpts.Follow = transform.parent;
         ZoomOptions.cmOpts.LookAt = cameraLookAt;
         ZoomOptions.ChangeZoom(6);
@@ -64,17 +64,16 @@ public class BoatController : MonoBehaviour, IInteractable
         rb.isKinematic = false;
         GetComponent<MeshCollider>().convex = true;
         GetComponent<MeshCollider>().isTrigger = true;
-
-        MapGenerator.player = transform.parent;
+        
         Interactor.instance.interactIndicator.SetActive(false);
     }
 
     private void Exit()
     {
-        ThirdPersonMovement.instance.gameObject.SetActive(true);
-        ThirdPersonMovement.instance.transform.position = exitPosition.position;
-        ZoomOptions.cmOpts.Follow = ThirdPersonMovement.instance.transform;
-        ZoomOptions.cmOpts.LookAt = ThirdPersonMovement.instance.transform.GetChild(2);
+        Player.instance.gameObject.SetActive(true);
+        Player.instance.transform.position = exitPosition.position;
+        ZoomOptions.cmOpts.Follow = Player.instance.transform;
+        ZoomOptions.cmOpts.LookAt = Player.instance.transform.GetChild(2);
         ZoomOptions.ChangeZoom(2);
 
         this.enabled = false;
@@ -85,8 +84,6 @@ public class BoatController : MonoBehaviour, IInteractable
         rb.isKinematic = true;
         GetComponent<MeshCollider>().isTrigger = false;
         GetComponent<MeshCollider>().convex = false;
-
-        MapGenerator.player = ThirdPersonMovement.instance.transform;
     }
 
     public void Interact()

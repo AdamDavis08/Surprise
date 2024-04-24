@@ -10,7 +10,7 @@ public class ZoomOptions : MonoBehaviour
     private static float[] bottomRigDefault = { -0.795f, 3f };
 
     public static CinemachineFreeLook cmOpts;
-
+    
     public static void ChangeZoom(int zoom)
     {
         cmOpts.m_Orbits[0].m_Height = topRigDefault[0] * zoom;

@@ -92,7 +92,7 @@ public class EntityManager : MonoBehaviour
     {
         foreach(Town town in towns)
         {
-            town.entityParent.gameObject.SetActive(MapGenerator.FindSqrDistanceBetweenTwoPoints(town.position, ThirdPersonMovement.playerPosition) <= townRenderDistance * townRenderDistance);
+            town.entityParent.gameObject.SetActive(MapGenerator.FindSqrDistanceBetweenTwoPoints(town.position, Player.playerPosition) <= townRenderDistance * townRenderDistance);
         } 
     }
 

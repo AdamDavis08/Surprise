@@ -42,9 +42,9 @@ public class DialogueManager : MonoBehaviour
         sentences.Clear();
         Interactor.inConversation = true;
 
-        if(ThirdPersonMovement.instance != null)
+        if(Player.instance != null)
         {
-            ThirdPersonMovement.instance.enabled = false;
+            Player.instance.enabled = false;
             ZoomOptions.cmOpts.enabled = false;
         }
 
@@ -86,9 +86,9 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(false);
         Interactor.inConversation = false;
 
-        if(ThirdPersonMovement.instance == null) return;
+        if(Player.instance == null) return;
 
-        ThirdPersonMovement.instance.enabled = true;
+        Player.instance.enabled = true;
         ZoomOptions.cmOpts.enabled = true;
     }
 }

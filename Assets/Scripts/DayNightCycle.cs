@@ -22,8 +22,8 @@ public class DayNightCycle : MonoBehaviour
         transform.rotation = Quaternion.Euler(time, 0f, 0f);
 
         moon.GetChild(0).localPosition = new Vector3(0f, 0f, moonDistance);
-        moon.position = ThirdPersonMovement.playerPosition;
+        moon.position = Player.playerPosition;
         moon.rotation = Quaternion.Euler(time + 180f, 0f, 0f);
-        moon.LookAt(ThirdPersonMovement.playerPosition);
+        moon.LookAt(Player.playerPosition);
     }
 }

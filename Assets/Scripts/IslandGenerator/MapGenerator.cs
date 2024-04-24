@@ -16,7 +16,6 @@ public class MapGenerator : MonoBehaviour
     public Terrain terrain;
     private TerrainData terrainData;
 
-    public static Transform player;
     public const float distanceToColliderThreshold = 400f;
 
     public bool autoUpdate = true;
@@ -28,7 +27,6 @@ public class MapGenerator : MonoBehaviour
 
     private void Start()
     {
-        player = ThirdPersonMovement.instance.transform;
         terrainData = terrain.terrainData;
         
         plane.SetActive(false);

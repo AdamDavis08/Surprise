@@ -38,7 +38,7 @@ public class StarField : MonoBehaviour
         float sinValue = Mathf.Sin(DayNightCycle.time * Mathf.Deg2Rad);
         DayNightCycle.lightSource.intensity = sinValue;
 
-        transform.position = ThirdPersonMovement.playerPosition;
+        transform.position = Player.playerPosition;
         starIntensity = -sinValue;
         starIntensity = Mathf.Clamp(starIntensity, 0f, 0.6f);
         particleMaterial.color = new Color(particleMaterial.color.r, particleMaterial.color.g, particleMaterial.color.b, starIntensity);

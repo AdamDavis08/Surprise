@@ -83,8 +83,8 @@ public class Enemy : MonoBehaviour, IEntity
         {
             run = true;
 
-            MoveTowardsTarget(ThirdPersonMovement.playerPosition);
-            if (MapGenerator.FindSqrDistanceBetweenTwoPoints(ThirdPersonMovement.playerPosition, transform.position) >= 2500f|| ThirdPersonMovement.isDead) //koren od 2500f e 50f
+            MoveTowardsTarget(Player.playerPosition);
+            if (MapGenerator.FindSqrDistanceBetweenTwoPoints(Player.playerPosition, transform.position) >= 2500f|| Player.isDead) //koren od 2500f e 50f
             {
                 animator.SetBool("isRunning", false);
                 animator.SetBool("isWalking", false);
@@ -259,12 +259,12 @@ public class Enemy : MonoBehaviour, IEntity
     private void OnDrawGizmosSelected()
     {
         Handles.DrawWireArc(transform.position, Vector3.up, Vector3.forward, 360, viewRadius);
-
+    
         Vector3 viewAngleA = DirectionFromAngle(-viewAngle / 2f + transform.eulerAngles.y);
         Vector3 viewAngleB = DirectionFromAngle(viewAngle / 2f + transform.eulerAngles.y);
         Handles.DrawLine(transform.position, transform.position + viewAngleA * viewRadius);
         Handles.DrawLine(transform.position, transform.position + viewAngleB * viewRadius);
-
+    
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(hitCheck.position, attackRadius);
     }

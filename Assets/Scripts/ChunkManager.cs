@@ -13,7 +13,7 @@ public class ChunkManager : MonoBehaviour
     
     private void Start()
     {
-        player = ThirdPersonMovement.instance.transform;
+        player = Player.instance.transform;
         
         InvokeRepeating("CheckChunks", 0.0f, chunkRate);
     }

@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 using Cinemachine;
 
-public class ThirdPersonMovement : MonoBehaviour, IEntity
+public class Player : MonoBehaviour, IEntity
 {
     public CharacterController controller;
     public Animator animator;
@@ -29,7 +29,7 @@ public class ThirdPersonMovement : MonoBehaviour, IEntity
     private bool isGrounded;
     private Vector3 velocity;
 
-    public static ThirdPersonMovement instance;
+    public static Player instance;
     public static Vector3 playerPosition
     {
         get
@@ -55,7 +55,7 @@ public class ThirdPersonMovement : MonoBehaviour, IEntity
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-
+        
         RaycastHit hitInfo;
         if(Physics.Raycast(groundCheck.position, -Vector3.up, out hitInfo))
             transform.position = hitInfo.point;
@@ -71,6 +71,8 @@ public class ThirdPersonMovement : MonoBehaviour, IEntity
             return;
         }
 
+        if(Input.GetMouseButton(1)) Aim();
+        
         // if(Input.GetMouseButtonDown(0))
         // {
         //     //TODO: SMENI GO KODOT MORASH GRD E
@@ -113,7 +115,7 @@ public class ThirdPersonMovement : MonoBehaviour, IEntity
             animator.SetBool("isJumping", true);
         }
 
-        if (direction.magnitude >= 0.1f)
+        if (direction.sqrMagnitude >= 0.1f)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
@@ -124,15 +126,16 @@ public class ThirdPersonMovement : MonoBehaviour, IEntity
             controller.Move(move);
             animator.SetBool("isRunning", isSprinting);
             animator.SetBool("isWalking", !isSprinting);
+            
+            if (isSprinting && isGrounded) runningParticleEffect.emissionRate = 10f;
         }
         else
         {
             animator.SetBool("isWalking", false);
             animator.SetBool("isRunning", false);
+            
+            runningParticleEffect.emissionRate = 0f;
         }
-
-        if (isSprinting && isGrounded) runningParticleEffect.emissionRate = 10f;
-        else runningParticleEffect.emissionRate = 0f;
     }
 
     public void ResetPlayer()
@@ -147,6 +150,12 @@ public class ThirdPersonMovement : MonoBehaviour, IEntity
         animator.Update(0f);
     }
 
+    private void Aim()
+    {
+        Vector3 result = new Vector3(cam.forward.x, 0f, cam.forward.z);
+        transform.forward = Vector3.Lerp(transform.forward, result, (turnSmoothTime * 100f) * Time.deltaTime);
+    }
+    
     public void Die()
     {
         if (isDead) return;

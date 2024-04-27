@@ -210,6 +210,7 @@ public class Enemy : MonoBehaviour, IEntity
 
         controller.enabled = false;
         isDead = true;
+        this.enabled = false;
         animator.SetTrigger("die");
     }
 

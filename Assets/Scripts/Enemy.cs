@@ -243,7 +243,7 @@ public class Enemy : MonoBehaviour, IEntity
             }
         }
     }
-
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;

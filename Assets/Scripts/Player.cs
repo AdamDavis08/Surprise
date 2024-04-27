@@ -29,6 +29,9 @@ public class Player : MonoBehaviour, IEntity
     private bool isGrounded;
     private Vector3 velocity;
 
+    private CinemachineFreeLook cinemachineFreeLook;
+    private CinemachineCameraOffset camOffset;
+    
     public static Player instance;
     public static Vector3 playerPosition
     {
@@ -55,6 +58,9 @@ public class Player : MonoBehaviour, IEntity
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+
+        cinemachineFreeLook = FindObjectOfType<CinemachineFreeLook>();
+        camOffset = cinemachineFreeLook.GetComponent<CinemachineCameraOffset>();
         
         RaycastHit hitInfo;
         if(Physics.Raycast(groundCheck.position, -Vector3.up, out hitInfo))
@@ -71,7 +77,12 @@ public class Player : MonoBehaviour, IEntity
             return;
         }
 
-        if(Input.GetMouseButton(1)) Aim();
+        if (Input.GetMouseButton(1)) Aim();
+        else
+        {
+            camOffset.m_Offset = Vector3.Lerp(camOffset.m_Offset, Vector3.zero, turnSmoothTime);
+            cinemachineFreeLook.m_Lens.FieldOfView = Mathf.Lerp(cinemachineFreeLook.m_Lens.FieldOfView, 40f, turnSmoothTime);
+        }
         
         // if(Input.GetMouseButtonDown(0))
         // {
@@ -127,7 +138,10 @@ public class Player : MonoBehaviour, IEntity
             animator.SetBool("isRunning", isSprinting);
             animator.SetBool("isWalking", !isSprinting);
             
+            Debug.Log("Doing");
+            
             if (isSprinting && isGrounded) runningParticleEffect.emissionRate = 10f;
+            else runningParticleEffect.emissionRate = 0f;
         }
         else
         {
@@ -154,6 +168,8 @@ public class Player : MonoBehaviour, IEntity
     {
         Vector3 result = new Vector3(cam.forward.x, 0f, cam.forward.z);
         transform.forward = Vector3.Lerp(transform.forward, result, (turnSmoothTime * 100f) * Time.deltaTime);
+        camOffset.m_Offset = Vector3.Lerp(camOffset.m_Offset, Vector3.right, turnSmoothTime);
+        cinemachineFreeLook.m_Lens.FieldOfView = Mathf.Lerp(cinemachineFreeLook.m_Lens.FieldOfView, 20f, turnSmoothTime);
     }
     
     public void Die()

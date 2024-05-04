@@ -8,4 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/IslandMap 1.unity
     guid: d2cfa5499535ec043b94a50dada2b686
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: b92eee0bfd77a584a9721100b1ce4595,
+      type: 2}

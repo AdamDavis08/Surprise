@@ -62,29 +62,29 @@ public class EntityManager : MonoBehaviour
             return;
         }
 
-        foreach(Town town in towns)
-        {
-            town.CreateEntityParent();
-            for (float x = town.position.x - town.sizeOfSquare / 2f; x <= town.position.x + town.sizeOfSquare / 2f; x++)
-            {
-                for (float z = town.position.z - town.sizeOfSquare / 2f; z <= town.position.z + town.sizeOfSquare / 2f; z++)
-                {
-                    if(Random.value > 1f - entity.spawnRate)
-                    {
-                        Vector3 position = new Vector3(x, 100f, z);
-                        RaycastHit hitInfo;
-                        if(Physics.Raycast(position, -Vector3.up, out hitInfo))
-                        {
-                            if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                            {
-                                position = hitInfo.point;
-                                entity.SpawnEntity(position, town.entityParent);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // foreach(Town town in towns)
+        // {
+        //     town.CreateEntityParent();
+        //     for (float x = town.position.x - town.sizeOfSquare / 2f; x <= town.position.x + town.sizeOfSquare / 2f; x++)
+        //     {
+        //         for (float z = town.position.z - town.sizeOfSquare / 2f; z <= town.position.z + town.sizeOfSquare / 2f; z++)
+        //         {
+        //             if(Random.value > 1f - entity.spawnRate)
+        //             {
+        //                 Vector3 position = new Vector3(x, 100f, z);
+        //                 RaycastHit hitInfo;
+        //                 if(Physics.Raycast(position, -Vector3.up, out hitInfo))
+        //                 {
+        //                     if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        //                     {
+        //                         position = hitInfo.point;
+        //                         entity.SpawnEntity(position, town.entityParent);
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
     }
 

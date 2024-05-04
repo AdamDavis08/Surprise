@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +13,8 @@ public class SetHumanObjectParent : MonoBehaviour
         while(transform.childCount > 0)
         {
             Transform child = transform.GetChild(i);
-            child.GetComponentInChildren<Collider>().enabled = false;    
-        
+            child.GetComponentInChildren<Collider>().enabled = false;
+
             RaycastHit hitInfo;
             Vector3 origin = new Vector3(child.position.x, 500f, child.position.z);
             if(Physics.Raycast(origin, -Vector3.up, out hitInfo))
@@ -25,7 +26,7 @@ public class SetHumanObjectParent : MonoBehaviour
                 else
                     i++;
             }
-
+            
             child.GetComponentInChildren<Collider>().enabled = true;
         }
         

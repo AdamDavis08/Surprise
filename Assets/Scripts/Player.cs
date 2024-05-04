@@ -6,8 +6,16 @@ using UnityEngine.InputSystem;
 using Cinemachine;
 using UnityEngine.EventSystems;
 
+public enum PlayerState
+{
+    PlayerAiming, PlayerNormal
+}
+
 public class Player : MonoBehaviour, IEntity
 {
+    [SerializeField]
+    private PlayerState state;
+    
     public CharacterController controller;
     public Animator animator;
 
@@ -62,6 +70,8 @@ public class Player : MonoBehaviour, IEntity
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        state = PlayerState.PlayerNormal;
+        UIManager.SetCrosshairVisibility(false);
         
         cinemachineFreeLook = FindObjectOfType<CinemachineFreeLook>();
         camOffset = cinemachineFreeLook.GetComponent<CinemachineCameraOffset>();
@@ -89,14 +99,17 @@ public class Player : MonoBehaviour, IEntity
     {
         float targetAngle = Mathf.Atan2(direction.x, direction.y) * Mathf.Rad2Deg + cam.eulerAngles.y;
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-        transform.rotation = Quaternion.Euler(0f, angle, 0f);
-            
+        if(state != PlayerState.PlayerAiming) transform.rotation = Quaternion.Euler(0f, angle, 0f);
+        
         Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
         Vector3 move = (isSprinting) ? moveDir.normalized * sprintSpeed * Time.deltaTime : moveDir.normalized * speed * Time.deltaTime;
         controller.Move(move);
+        
         animator.SetBool("isRunning", isSprinting);
         animator.SetBool("isWalking", !isSprinting);
-            
+        animator.SetFloat("DirectionX", Input.GetAxis("Horizontal"));
+        animator.SetFloat("DirectionY", Input.GetAxis("Vertical"));
+        
         if (isSprinting && isGrounded) runningParticleEffect.emissionRate = 10f;
         else runningParticleEffect.emissionRate = 0f;
     }
@@ -115,11 +128,28 @@ public class Player : MonoBehaviour, IEntity
     
     private void Aim()
     {
+        state = PlayerState.PlayerAiming;
+        animator.SetLayerWeight(2, 1);
+        
         Vector3 result = new Vector3(cam.forward.x, 0f, cam.forward.z);
         transform.forward = Vector3.Lerp(transform.forward, result, (turnSmoothTime * 100f) * Time.deltaTime);
         camOffset.m_Offset = Vector3.Lerp(camOffset.m_Offset, Vector3.right, turnSmoothTime);
         cinemachineFreeLook.m_Lens.FieldOfView = Mathf.Lerp(cinemachineFreeLook.m_Lens.FieldOfView, 20f, turnSmoothTime);
         UIManager.SetCrosshairVisibility(true);
+    }
+
+    private void OutAim()
+    {
+        state = PlayerState.PlayerNormal;
+        animator.SetLayerWeight(2, 0);
+        animator.Play("EquipBow", 2, 0f);
+        
+        if (camOffset.m_Offset != Vector3.zero || cinemachineFreeLook.m_Lens.FieldOfView != 40)
+        {
+            camOffset.m_Offset = Vector3.Lerp(camOffset.m_Offset, Vector3.zero, turnSmoothTime);
+            cinemachineFreeLook.m_Lens.FieldOfView = Mathf.Lerp(cinemachineFreeLook.m_Lens.FieldOfView, 40f, turnSmoothTime);
+            UIManager.SetCrosshairVisibility(false);   
+        }
     }
     
     public void Die()
@@ -148,19 +178,8 @@ public class Player : MonoBehaviour, IEntity
             return;
         }
         
-        if (Input.GetMouseButton(1))
-        {
-            Aim();
-        }
-        else
-        {
-            if (camOffset.m_Offset != Vector3.zero || cinemachineFreeLook.m_Lens.FieldOfView != 40)
-            {
-                camOffset.m_Offset = Vector3.Lerp(camOffset.m_Offset, Vector3.zero, turnSmoothTime);
-                cinemachineFreeLook.m_Lens.FieldOfView = Mathf.Lerp(cinemachineFreeLook.m_Lens.FieldOfView, 40f, turnSmoothTime);
-                UIManager.SetCrosshairVisibility(false);   
-            }
-        }
+        if (Input.GetMouseButton(1)) Aim();
+        else OutAim();
 
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         isSprinting = Input.GetKey(KeyCode.LeftShift) && !ignoreGravity;
@@ -174,7 +193,7 @@ public class Player : MonoBehaviour, IEntity
             velocity.y = -2f;
             animator.SetBool("isJumping", false);
         }
-        
+
         Vector2 direction = playerActions.Player.Movement.ReadValue<Vector2>().normalized;
 
         if(!ignoreGravity)
@@ -183,7 +202,7 @@ public class Player : MonoBehaviour, IEntity
             controller.Move(velocity * Time.deltaTime);
         }
         
-        if (direction.sqrMagnitude >= 0.1f) 
+        if (direction.sqrMagnitude >= 0.1f)
             Move(direction);
         else
         {

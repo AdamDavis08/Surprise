@@ -78,7 +78,7 @@ public class Player : MonoBehaviour, IEntity
         
         playerActions = new PlayerInputActions();
         playerActions.Player.Enable();
-        playerActions.Player.Attack.performed += Attack;
+        playerActions.Player.Attack.canceled += Attack;
         playerActions.Player.Jump.performed += Jump;
 
         RaycastHit hitInfo;
@@ -116,14 +116,7 @@ public class Player : MonoBehaviour, IEntity
 
     private void Attack(InputAction.CallbackContext context)
     {
-        //TODO: SMENI GO KODOT MORASH GRD E
-        RaycastHit hitInfo;
-        if(Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hitInfo, 1000f, ~ignoreAttackMask))
-        {
-            Debug.Log(hitInfo.collider.gameObject.name);
-            hitInfo.collider.TryGetComponent<EntityStats>(out EntityStats stats);
-            if(stats != null) stats.TakeDamage(50);
-        }
+        GetComponentInChildren<Weapon>().Attack();
     }
     
     private void Aim()
@@ -136,6 +129,8 @@ public class Player : MonoBehaviour, IEntity
         camOffset.m_Offset = Vector3.Lerp(camOffset.m_Offset, Vector3.right, turnSmoothTime);
         cinemachineFreeLook.m_Lens.FieldOfView = Mathf.Lerp(cinemachineFreeLook.m_Lens.FieldOfView, 20f, turnSmoothTime);
         UIManager.SetCrosshairVisibility(true);
+        
+        animator.SetBool("isHoldingMouse", Input.GetMouseButton(0));
     }
 
     private void OutAim()

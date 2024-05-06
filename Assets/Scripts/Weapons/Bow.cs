@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Bow : Weapon
@@ -14,7 +15,7 @@ public class Bow : Weapon
 
     public override void Attack()
     {
-        GameObject arrow = Instantiate(arrowPrefab, shootPoint.position, Quaternion.identity);
-        arrow.GetComponent<Rigidbody>().AddForce(Player.instance.transform.forward * 1000f);
+        GameObject arrow = Instantiate(arrowPrefab, shootPoint.position, Quaternion.LookRotation(Player.instance.transform.forward));
+        arrow.GetComponent<Rigidbody>().velocity = Camera.main.transform.forward * 30f;
     }
 }
